@@ -1,12 +1,17 @@
 let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
 let gameInterval;
 let isGameRunning = false;
 
 const gameContainer = document.querySelector('.game-container');
 const bucket = document.getElementById('bucket');
 const scoreDisplay = document.getElementById('score');
+const highScoreDisplay = document.getElementById('highScore');
 const startBtn = document.getElementById('startBtn');
 const resetBtn = document.getElementById('resetBtn');
+
+// Initialize high score display
+highScoreDisplay.textContent = `Highest Score: ${highScore}`;
 
 // Bucket movement
 let bucketPosition = gameContainer.offsetWidth / 2;
@@ -45,8 +50,15 @@ function createStar() {
         if (currentTop >= gameContainer.offsetHeight - 60) {
             // Check collision with bucket
             if (starLeft >= bucketPosition && starLeft <= bucketPosition + bucketWidth) {
-                score += 10;
+                score++;
                 scoreDisplay.textContent = `Score: ${score}`;
+                
+                // Update high score if current score is higher
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('highScore', highScore);
+                    highScoreDisplay.textContent = `Highest Score: ${highScore}`;
+                }
             }
             star.remove();
             return;
